@@ -40,6 +40,7 @@
     "passport-jwt": "^4.0.1",
     "qrcode": "^1.5.3",
     "qrcode-generator": "^1.4.4",
-    "razorpay": "^2.8.6"
+    "razorpay": "^2.8.6",
+    "serverless-http": "^3.2.0"
   }
 }
