@@ -1,5 +1,5 @@
 const express = require("express");
-const expressIP=require("express-ip");
+ 
 require("./src/db/connection");
 const cors=require("cors");
 const Visitor=require("./src/models/visitors");
@@ -49,28 +49,28 @@ app.use(function (req, res, next){
 
  
 
-app.use(async (req, res, next) => {
-  try {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    let missingIP = false;
+// app.use(async (req, res, next) => {
+//   try {
+//     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+//     let missingIP = false;
 
-    if (!ip) {
-      missingIP = true;
-      console.error('No IP address found');
-    }
+//     if (!ip) {
+//       missingIP = true;
+//       console.error('No IP address found');
+//     }
 
-    const existingVisitor = await Visitor.findOne({ ip });
-    if (!existingVisitor && !missingIP) {
-      await Visitor.create({ ip });
-    }
+//     const existingVisitor = await Visitor.findOne({ ip });
+//     if (!existingVisitor && !missingIP) {
+//       await Visitor.create({ ip });
+//     }
 
-    req.missingIP = missingIP;
-    next();
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-});
+//     req.missingIP = missingIP;
+//     next();
+//   } catch (err) {
+//     console.error(err);
+//     next(err);
+//   }
+// });
 
 
 app.use(user);
