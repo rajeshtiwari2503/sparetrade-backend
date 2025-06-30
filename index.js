@@ -98,6 +98,10 @@ app.use(notification);
 app.use(compactible);
 app.use(pickupLocation);
 app.use(courierOder);
+app.get("/", (req, res) => {
+  console.log("✅ Server is running");
+  res.send("Server is running!");
+});
 
 const port = process.env.PORT || 5000;
 app.listen(port,()=>{
