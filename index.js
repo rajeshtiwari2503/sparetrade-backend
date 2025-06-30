@@ -29,11 +29,7 @@ const app=express();
 
 app.use(express.json());
 
-    // const corsOptions = {
-    //     origin: 'http://www.sparetrade.in', // Replace with your React app's URL
-    //     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    //     credentials: true, // Enable cookies, authorization headers, etc. (if needed)
-    //   };
+   
 
 app.use(cors());
 
@@ -104,6 +100,10 @@ app.get("/", (req, res) => {
 });
 
 const port = process.env.PORT || 5000;
-app.listen(port,()=>{
-    console.log(`Listening on port and pipeline ${port}`);
+// app.listen(port,()=>{
+//     console.log(`Listening on port and pipeline ${port}`);
+// });
+
+const onlineServer=app.listen(port, () => {
+  console.log("Server is running on PORT", port);
 });
