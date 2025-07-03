@@ -29,8 +29,8 @@ router.post("/brandRegistration",upload().single("gstDocument"),async (req, res)
             let obj = { ...body, otp: otp,gstDocument:req.file.location };
             let brand = new BrandModel(obj);
             let newBrand = await brand.save();
-            smsSend(otp, body.contact);
-            sendMail(body.email,body.password,bool);
+            // smsSend(otp, body.contact);
+            // sendMail(body.email,body.password,bool);
             let notify=new Notification({name:body.brandName,category:"BRAND",id:newBrand._id,brandId:newBrand._id,title:"New brand registered"});
             await notify.save();
             res.json({
@@ -67,7 +67,7 @@ router.post("/brandLogin", async (req, res) => {
             if (checkBrand.status === "INACTIVE") {
                 let otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false }); 
                 await BrandModel.findByIdAndUpdate({ _id: checkBrand._id }, { otp: otp });
-                smsSend(otp, checkBrand.contact);
+                // smsSend(otp, checkBrand.contact);
             }
             res.json({ status: true, user: checkBrand, msg: "Login successfully", token: "bearer " + token });
         } else {
@@ -163,7 +163,7 @@ router.post("/brandResendOtp",async (req,res)=>{
         let otp=otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets:false });
         let brand=await BrandModel.findOneAndUpdate({email:body.email},{otp:otp});
         if(brand){
-            smsSend(otp,brand.contact);
+            // smsSend(otp,brand.contact);
             res.json({status:true,msg:"OTP sent"});
         }else{
             res.json({status:false , msg:"Something went wrong!"});
@@ -180,7 +180,7 @@ router.patch("/brandForgetPassword",async(req,res)=>{
       let brand=await BrandModel.findOneAndUpdate({email:body.email},{password:body.password});
       if(brand){
          res.json({status:true,msg:"Password changed successfully!"});
-        sendMail(body.email,body.password,bool);
+        // sendMail(body.email,body.password,bool);
       }else{
          res.json({status:false,msg:"Something went wrong!"});
       }

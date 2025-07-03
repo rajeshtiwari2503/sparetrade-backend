@@ -9,7 +9,8 @@ const UserModel = require("../models/userRegistrationModel");
 const Notification=require("../models/notification");
 const fs = require("fs");
 const app = express();
-const { smsSend, sendMail, upload } = require("../services/service");
+// const { smsSend, sendMail, upload } = require("../services/service");
+const {   upload } = require("../services/service");
 app.use(passport.initialize());
 
 
@@ -41,8 +42,8 @@ router.post("/userRegistration", async (req, res) => {
             let obj = { ...body, otp: otp };
             let user = new UserModel(obj);
             let user1 = await user.save();
-            smsSend(otp, body.contact);
-            sendMail(body.email,body.password,bool);
+            // smsSend(otp, body.contact); 
+            // sendMail(body.email,body.password,bool);
             let notify=new Notification({name:body.name,category:"USER",id:user1._id,title:"New user registered"});
             await notify.save();
             res.json({ status: true, msg: "Registration successful" });
@@ -65,8 +66,9 @@ router.post("/serviceCenterRegistration", upload().single("document"), async (re
             let obj = { ...body, document: req.file.location, otp: otp };
             let user = new UserModel(obj);
             let user1 = await user.save();
-            smsSend(otp, body.contact);
-             sendMail(body.email,body.password,bool);
+            // smsSend(otp, body.contact);
+            //  sendMail(body.email,body.password,bool);
+            
             let notify=new Notification({name:body.name,category:"USER",id:user1._id,title:"New Reseller registered"});
             await notify.save();
             res.json({ status: true, msg: "Registration successful" });
@@ -89,7 +91,7 @@ router.post("/userLogin", async (req, res) => {
             if (checkUser.status === "INACTIVE") {
                 let otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
                 await UserModel.findByIdAndUpdate({ _id: checkUser._id }, { otp: otp });
-                smsSend(otp, checkUser.contact);
+                // smsSend(otp, checkUser.contact);
             }
             res.json({ status: true, user: checkUser, msg: "Logged In successfully", token: "bearer " + token });
         } else {
@@ -107,7 +109,7 @@ router.post("/userPhoneLogin", async (req, res) => {
         if (checkUser) {
             let otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
             await UserModel.findByIdAndUpdate({ _id: checkUser._id }, { otp: otp });
-            smsSend(otp, checkUser.contact);
+            // smsSend(otp, checkUser.contact);
             res.json({ status: true, msg: "success" });
         } else {
             res.json({ status: false, msg: "Incorrect Phone number" });
@@ -197,7 +199,7 @@ router.post("/resendOtp", async (req, res) => {
         let otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
         let user = await UserModel.findOneAndUpdate({ email: body.email }, { otp: otp });
         if (user) {
-            smsSend(otp, user.contact);
+            // smsSend(otp, user.contact);
             res.json({ status: true, msg: "OTP sent" });
         } else {
             res.json({ status: false, msg: "Something went wrong!" });
@@ -214,7 +216,7 @@ router.patch("/forgetPassword", async (req, res) => {
         let user = await UserModel.findOneAndUpdate({ email: body.email }, { password: body.password });
         if (user) {
             res.json({ status: true, msg: "Password changed successfully!" });
-             sendMail(body.email,body.password,bool);
+            //  sendMail(body.email,body.password,bool);
         } else {
             res.json({ status: false, msg: "Something went wrong!" });
         }
